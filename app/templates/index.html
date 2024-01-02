@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS imports-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="static/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+    <!-- JS imports-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="static/main.js"></script>
+
+    <title>SAT</title>
+
+    <script>hljs.highlightAll();</script>
+  </head>
+
+  <body>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    <div class="container-fluid vh-100 d-flex flex-column">
+      <div class="row shadow-sm border-bottom border-primary border-2" style="--bs-border-opacity: .5;">
+        <div class="d-flex flex-row bd-highlight pb-1" id="navbar">
+<!--           <div class="p-2 border-bottom border-2 border-danger">Flex item 1</div> -->
+        </div>
+      </div>
+      <div class="row d-flex flex-fill overflow-hidden">
+        <div class="col-3 pt-2" id="sidebar">
+
+          adfs
+
+        </div>
+        <div class="col-9">
+          <div id="input" class="input-group mt-3">
+            <input type="text" class="form-control" placeholder="" aria-label="data" aria-describedby="arg1-button" id="arg1">
+            <!--                     <button class="btn btn-outline-secondary" type="button" id="arg1-button">RUN All</button>
+                     --> <button class="btn btn-outline-secondary" type="button" id="clear" onclick="document.getElementById('results').innerHTML=''">clear</button>
+            <button class="btn btn-outline-secondary" type="button" id="clear" onclick="html2pdf().set({  pagebreak: { after: '.hljs' }
+, filename:'SAT-export.pdf'}).from(document.getElementById('results')).save()">Export</button>
+          </div>
+
+          <div id="output" class="d-flex flex-column w-75 mh-100 py-2" style="overflow-y: scroll;;position:fixed;">
+<!--             <div class="col-10 ps-5 mh-100 overflow-auto py-2"> -->
+              <pre class="section-to-print" id="results"></pre>
+<!--             </div> -->
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex mt-auto pt-1 border-top border-primary border-2" style="--bs-border-opacity: .5;z-index:99; background-color: var(--bs-body-bg);">
+        <p>SAT - <a href="https://github.com/tttttx2/SecurityAnalystToolkit">github.com/tttttx2/SecurityAnalystToolkit</a> - License: non commercial use only</p>
+      </div>
+    </div>
+
+
+
+  </body>
+
+</html>
