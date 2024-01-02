@@ -28,20 +28,24 @@ def list_plugin_features(plugin):
 
 @app.route('/plugins/<path:plugin>/<path:feature>', methods = ['POST','GET','PUT','DELETE'])
 def exec_feature(plugin,feature):
-    data=request.args.get('data')
+#    data=request.args.get('data')
     mod = importlib.import_module('plugins.{}.{}'.format(plugin,feature))
 
     if request.method == 'POST' and callable(mod.create):
-        return mod.create(data)
+        data=request.args.to_dict()
+        return mod.create(**data)
 
     elif request.method == 'GET' and callable(mod.read):
-        return mod.read(data)
+        data=request.args.to_dict()
+        return mod.read(**data)
 
     elif request.method == 'PUT' and callable(mod.update):
-        return mod.update(data)
+        data=request.args.to_dict()
+        return mod.update(**data)
 
     elif request.method == 'DELETE' and callable(mod.delete):
-        return mod.delete(data)
+        data=request.args.to_dict()
+        return mod.delete(**data)
 
     else:
         return "Invalid Request"
@@ -65,16 +69,20 @@ def swaggerjson():
             mod = importlib.import_module('plugins.{}.{}'.format(plugin,feature))
             paths = {}            
             if callable(mod.create):
-                paths["post"] = {"tags":[plugin], "parameters":[{"name":"data", "in":"query", "type":"string"}], "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
+                params = [{"name":i, "in":"query", "type":"string"} for i in mod.create.__code__.co_varnames[:mod.create.__code__.co_argcount]]
+                paths["post"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
             if callable(mod.read):
-                paths["get"] = {"tags":[plugin], "parameters":[{"name":"data", "in":"query", "type":"string"}], "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
+                params = [{"name":i, "in":"query", "type":"string"} for i in mod.read.__code__.co_varnames[:mod.read.__code__.co_argcount]]
+                paths["get"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
             if callable(mod.update):
-                paths["put"] = {"tags":[plugin], "parameters":[{"name":"data", "in":"query", "type":"string"}], "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
+                params = [{"name":i, "in":"query", "type":"string"} for i in mod.update.__code__.co_varnames[:mod.update.__code__.co_argcount]]
+                paths["put"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
             if callable(mod.delete):
-                paths["delete"] = {"tags":[plugin], "parameters":[{"name":"data", "in":"query", "type":"string"}], "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
+                params = [{"name":i, "in":"query", "type":"string"} for i in mod.delete.__code__.co_varnames[:mod.delete.__code__.co_argcount]]
+                paths["delete"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
             swagger_json["paths"]["/{}/{}".format(plugin,feature)] = paths
     return swagger_json
