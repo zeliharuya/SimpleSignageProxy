@@ -2,6 +2,19 @@ services:
   ssp:
     build: .
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - ./data:/data
+
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.http.endpoint=http://ssp:8080/plugins/traefik/api_provider?id=api"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"

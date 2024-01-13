@@ -29,16 +29,22 @@ function start_feature_read(plugin, feature, id) {
     }
 
     if ("table" in data){
-      tablecode = '<table class="table"><thead><tr>'
-      Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element+'</th>');
-      tablecode += '<th></th><th></th></tr></thead><tbody>'
-      data['table'].forEach((element) => tablecode+='<tr><td>'+Object.values(element).join('</td><td>')+'</td><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td></tr>');
-      // tablecode+='<tr><td>NEW</td>';
-      // Object.keys(data['table'][0]).forEach((element) => tablecode+='<td></td>');
-      // tablecode += '<td></td></tr>'
-      tablecode += '</tbody></table>'
-      tablecode += '<br><div class="input-group mt-2"><input type="text" class="form-control" placeholder="New ID" aria-label="data" aria-describedby="arg1-button" id="arg1"><button class="btn btn-outline-secondary" type="button" id="new_button" onclick="start_feature_create(\''+plugin+'\', \''+feature+'\', document.getElementById(\'arg1\').value)">NEW</button></div>'
-      document.getElementById("results").innerHTML = tablecode
+      if (data['table'] == false){
+       tablecode = '<div class="input-group mt-2"><input type="text" class="form-control" placeholder="New ID" aria-label="data" aria-describedby="arg1-button" id="arg1"><button class="btn btn-outline-secondary" type="button" id="new_button" onclick="start_feature_create(\''+plugin+'\', \''+feature+'\', document.getElementById(\'arg1\').value)">NEW</button></div>'
+       document.getElementById("results").innerHTML = tablecode
+      }
+      else {
+        tablecode = '<table class="table"><thead><tr>'
+        Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element+'</th>');
+        tablecode += '<th></th><th></th></tr></thead><tbody>'
+        data['table'].forEach((element) => tablecode+='<tr><td>'+Object.values(element).join('</td><td>')+'</td><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td></tr>');
+        // tablecode+='<tr><td>NEW</td>';
+        // Object.keys(data['table'][0]).forEach((element) => tablecode+='<td></td>');
+        // tablecode += '<td></td></tr>'
+        tablecode += '</tbody></table>'
+        tablecode += '<br><div class="input-group mt-2"><input type="text" class="form-control" placeholder="New ID" aria-label="data" aria-describedby="arg1-button" id="arg1"><button class="btn btn-outline-secondary" type="button" id="new_button" onclick="start_feature_create(\''+plugin+'\', \''+feature+'\', document.getElementById(\'arg1\').value)">NEW</button></div>'
+        document.getElementById("results").innerHTML = tablecode
+      }
     }
 
     if ("form" in data){
