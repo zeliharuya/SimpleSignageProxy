@@ -24,6 +24,10 @@ function load_content(plugin) {
 function start_feature_read(plugin, feature, id) {
   document.getElementById("feature_button_"+feature).disabled = true;
   $.getJSON('plugins/'+plugin+'/'+feature+'?id='+id, function(data) {
+    if ("text" in data){
+      document.getElementById("results").innerHTML = data['text']
+    }
+
     if ("table" in data){
       tablecode = '<table class="table"><thead><tr>'
       Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element+'</th>');
@@ -39,7 +43,7 @@ function start_feature_read(plugin, feature, id) {
 
     if ("form" in data){
       formcode = '<form id="form" onsubmit="return false;">'
-      Object.keys(data['form']).forEach((element) => formcode+='<div class="mb-3"><label for="form_'+element+'" class="form-label">'+element+'</label><input type="text" class="form-control" name="'+element+'" id="form_'+element+'" '+((element=='id')?('disabled'):(''))+'></div>');
+      Object.keys(data['form']).forEach((element) => formcode+='<div class="mb-3"><label for="form_'+element+'" class="form-label">'+element+'</label><input type="text" class="form-control" name="'+element+'" id="form_'+element+'" '+((element=='id')?('readonly'):(''))+'></div>');
 
       formcode += '<div class="mb-3"><button type="submit" class="btn btn-primary" onclick="start_feature_update(\''+plugin+'\', \''+feature+'\', $(\'#form\').serialize());start_feature_read(\''+plugin+'\', \''+feature+'\',\'\')">Save</button></div>'
       formcode += '</form>'
