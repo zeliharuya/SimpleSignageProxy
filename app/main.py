@@ -31,19 +31,19 @@ def exec_feature(plugin,feature):
 #    data=request.args.get('data')
     mod = importlib.import_module('plugins.{}.{}'.format(plugin,feature))
 
-    if request.method == 'POST' and callable(mod.create):
+    if request.method == 'POST' and hasattr(mod, "create"):
         data=request.args.to_dict()
         return mod.create(**data)
 
-    elif request.method == 'GET' and callable(mod.read):
+    elif request.method == 'GET' and hasattr(mod, "read"):
         data=request.args.to_dict()
         return mod.read(**data)
 
-    elif request.method == 'PUT' and callable(mod.update):
+    elif request.method == 'PUT' and hasattr(mod, "update"):
         data=request.args.to_dict()
         return mod.update(**data)
 
-    elif request.method == 'DELETE' and callable(mod.delete):
+    elif request.method == 'DELETE' and hasattr(mod, "delete"):
         data=request.args.to_dict()
         return mod.delete(**data)
 
@@ -68,19 +68,19 @@ def swaggerjson():
         for feature in [i.split('/')[-1].split('.')[-2] for i in glob.glob("/app/plugins/{}/*.py".format(plugin), recursive=False)]:
             mod = importlib.import_module('plugins.{}.{}'.format(plugin,feature))
             paths = {}            
-            if callable(mod.create):
+            if hasattr(mod, "create"):
                 params = [{"name":i, "in":"query", "type":"string"} for i in mod.create.__code__.co_varnames[:mod.create.__code__.co_argcount]]
                 paths["post"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
-            if callable(mod.read):
+            if hasattr(mod, "read"):
                 params = [{"name":i, "in":"query", "type":"string"} for i in mod.read.__code__.co_varnames[:mod.read.__code__.co_argcount]]
                 paths["get"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
-            if callable(mod.update):
+            if hasattr(mod, "update"):
                 params = [{"name":i, "in":"query", "type":"string"} for i in mod.update.__code__.co_varnames[:mod.update.__code__.co_argcount]]
                 paths["put"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
-            if callable(mod.delete):
+            if hasattr(mod, "delete"):
                 params = [{"name":i, "in":"query", "type":"string"} for i in mod.delete.__code__.co_varnames[:mod.delete.__code__.co_argcount]]
                 paths["delete"] = {"tags":[plugin], "parameters":params, "responses":{'200':{"description":"API Call succeded", "schema":{"$ref": "#/definitions/response"}}}}
 
