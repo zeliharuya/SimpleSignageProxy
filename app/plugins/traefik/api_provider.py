@@ -1,7 +1,7 @@
 import json
 import os
 import requests
-
+import re
 
 
 #todo input sanitization
@@ -23,10 +23,17 @@ def read(id=False): # GET
         # provider['http']['middlewares']['redirect']={"redirectregex":{"regex":"^(https?://[^/]+/[a-z0-9_]+)$", "replacement":"${1}/"} }
         provider['http']['middlewares']['strip']={"stripprefixregex":{"regex":"/[a-z0-9_]+"} }
 
-
+#^(https?://[^/]+/?)$
         # add configured screens
         for screen in data['table']:
-            provider['http']['routers']['router_'+screen['id']]={'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)'}
-            provider['http']['services']['service_'+screen['id']]={"loadBalancer":{"servers":[{'url':screen['url']}], "passHostHeader": False } }
+            try:
+                screen_host = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[0]
+                screen_path = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[1]
+
+                provider['http']['routers']['router_'+screen['id']]={'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)', 'middlewares':['service_'+screen['id']]}
+                provider['http']['services']['service_'+screen['id']]={"loadBalancer":{"servers":[{'url':screen_host}], "passHostHeader": False } }
+                provider['http']['middlewares']['service_'+screen['id']]={"redirectregex":{"regex":"^(https?://[^/]+/?)$", "replacement":"${1}"+screen_path} }
+            except:
+                print("error parsing URL")
 
         return provider
