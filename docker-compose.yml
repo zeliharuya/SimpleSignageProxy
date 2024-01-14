@@ -5,6 +5,9 @@ services:
       - "8081:8080"
     volumes:
       - ./data:/data
+    environment:
+      - SSP_DOMAIN=screens.example.com
+
 
   traefik:
     image: "traefik:v2.10"

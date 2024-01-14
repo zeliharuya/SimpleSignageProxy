@@ -16,17 +16,17 @@ def read(id=False): # GET
         data = json.loads(r.text)
 
         # add ssp admin panel
-        provider['http']['routers']['admin']={'entryPoints':['web', 'websecure'], 'service':'admin', 'rule':'PathPrefix(`/admin`)', 'middlewares':["chain"]}
+        provider['http']['routers']['admin']={'entryPoints':['web', 'websecure'], 'service':'admin', 'rule':'HOST(`'+os.environ['SSP_DOMAIN']+'`)'}
         provider['http']['services']['admin']={"loadBalancer":{"servers":[{'url':"http://ssp:8080"}] } }
 
-        provider['http']['middlewares']['chain']={"chain":{"middlewares":["redirect", "strip"]} }
-        provider['http']['middlewares']['redirect']={"redirectregex":{"regex":"^(https?://[^/]+/[a-z0-9_]+)$", "replacement":"${1}/"} }
+        # provider['http']['middlewares']['chain']={"chain":{"middlewares":["redirect", "strip"]} }
+        # provider['http']['middlewares']['redirect']={"redirectregex":{"regex":"^(https?://[^/]+/[a-z0-9_]+)$", "replacement":"${1}/"} }
         provider['http']['middlewares']['strip']={"stripprefixregex":{"regex":"/[a-z0-9_]+"} }
 
 
         # add configured screens
         for screen in data['table']:
-            provider['http']['routers']['router_'+screen['id']]={'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'PathPrefix(`/'+screen['id']+'`)', 'middlewares':['chain']}
+            provider['http']['routers']['router_'+screen['id']]={'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)'}
             provider['http']['services']['service_'+screen['id']]={"loadBalancer":{"servers":[{'url':screen['url']}], "passHostHeader": False } }
 
         return provider
