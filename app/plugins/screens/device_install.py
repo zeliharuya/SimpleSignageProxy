@@ -34,8 +34,7 @@ EOL
 chmod +x /home/pi/refresh.sh
 echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1\\n" >> /boot/config.txt
 
-crontab -l -u pi > mycron
-echo -ne "*/5 * * * * /home/pi/refresh.sh >/dev/null 2>&1\\n" >> mycron
+echo -ne "*/5 * * * * /home/pi/refresh.sh >/dev/null 2>&1\\n" > mycron
 crontab -u pi mycron
 echo -ne "@reboot dmesg -n 1\\n0 0 * * * reboot\\n" > mycron
 crontab -u root mycron
