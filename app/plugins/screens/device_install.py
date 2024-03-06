@@ -33,8 +33,6 @@ EOF > /home/pi/refresh.sh
 
 chmod +x /home/pi/refresh.sh
 echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1" >> /boot/config.txt
-echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1" >> /boot/config.txt
-
 
 crontab -l -u pi > mycron
 echo "*/5 * * * * /home/pi/refresh.sh >/dev/null 2>&1" >> mycron
