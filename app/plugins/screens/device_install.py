@@ -17,7 +17,7 @@ mkdir -p /etc/chromium/policies/managed /etc/chromium/policies/recommended
 mkdir -p /home/pi/.config/lxsession/LXDE-pi/
 
 
-echo -ne '{{\\n"HomepageLocation":"http://'$(hostname)'.{0}",\\n"NewTabPageLocation":"http://'$(hostname)'.{0}",\\n"ShowHomeButton":true,\\n"RestoreOnStartup":5}}'>/etc/chromium/policies/managed/CHROME-GLOBAL.json
+echo -ne '{{\\n"HomepageLocation":"http://'$(hostname -s)'.{0}",\\n"NewTabPageLocation":"http://'$(hostname -s)'.{0}",\\n"ShowHomeButton":true,\\n"RestoreOnStartup":5}}'>/etc/chromium/policies/managed/CHROME-GLOBAL.json
 
 cat > /home/pi/refresh.sh <<'EOL'
 #!/bin/bash
@@ -50,7 +50,7 @@ cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<EOL
 @xset s noblank
 
 # Chromium automatisch im incognito- und Kiosk-Modus starten und eine Seite öffnen
-@chromium-browser --kiosk http://$(hostname).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized
+@chromium-browser --kiosk http://$(hostname -s).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized
 #switchtab = bash ~/switchtab.sh
 
 # Mauszeiger deaktivieren
