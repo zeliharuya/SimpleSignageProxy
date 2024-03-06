@@ -19,8 +19,8 @@ mkdir -p /home/pi/.config/lxsession/LXDE-pi/
 
 echo -ne '{{\\n"HomepageLocation":"http://'$(hostname)'.{0}",\\n"NewTabPageLocation":"http://'$(hostname)'.{0}",\\n"ShowHomeButton":true,\\n"RestoreOnStartup":5}}'>/etc/chromium/policies/managed/CHROME-GLOBAL.json
 
-cat << EOF
-#! /bin/bash
+cat > /home/pi/refresh.sh <<'EOL'
+#!/bin/bash
 export XAUTHORITY=/home/pi/.Xauthority
 export DISPLAY=:0
 #xdotool search --onlyvisible --class chromium windowfocus key F5
@@ -29,7 +29,7 @@ sleep 2
 xdotool search --onlyvisible --class chromium windowfocus key ctrl+Tab
 sleep 30
 xdotool search --onlyvisible --class chromium windowfocus key ctrl+w
-EOF > /home/pi/refresh.sh
+EOL
 
 chmod +x /home/pi/refresh.sh
 echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1" >> /boot/config.txt
@@ -42,7 +42,7 @@ crontab -u root mycron
 rm mycron
 
 
-cat << EOF
+cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<'EOL'"
 
 # Bildschirmschoner deaktivieren
 @xset s off
@@ -56,7 +56,7 @@ cat << EOF
 # Mauszeiger deaktivieren
 @unclutter
 
-EOF > /home/pi/.config/lxsession/LXDE-pi/autostart
+EOL
 
         """.format(id)
         return script
