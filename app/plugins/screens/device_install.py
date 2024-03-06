@@ -42,7 +42,7 @@ crontab -u root mycron
 rm mycron
 
 
-cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<'EOL'"
+cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<'EOL'
 
 # Bildschirmschoner deaktivieren
 @xset s off
