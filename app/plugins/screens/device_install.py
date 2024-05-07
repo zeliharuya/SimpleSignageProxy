@@ -34,7 +34,7 @@ EOL
 chmod +x /home/pi/refresh.sh
 echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1\\n" >> /boot/config.txt
 
-echo -ne "*/5 * * * * /home/pi/refresh.sh >/dev/null 2>&1\\n" > mycron
+echo -ne "*/15 * * * * /home/pi/refresh.sh >/dev/null 2>&1\\n" > mycron
 crontab -u pi mycron
 echo -ne "@reboot dmesg -n 1\\n0 0 * * * reboot\\n" > mycron
 crontab -u root mycron
@@ -49,7 +49,7 @@ cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<EOL
 @xset s noblank
 
 # Chromium automatisch im incognito- und Kiosk-Modus starten und eine Seite öffnen
-@chromium-browser --kiosk http://$(hostname -s).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized
+@chromium-browser --kiosk http://$(hostname -s).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
 #switchtab = bash ~/switchtab.sh
 
 # Mauszeiger deaktivieren
