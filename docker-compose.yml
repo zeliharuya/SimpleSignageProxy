@@ -1,8 +1,8 @@
 services:
   ssp:
     build: .
-    ports:
-      - "8081:8080"
+#    ports:
+#      - "8081:8080"
     volumes:
       - ./data:/data
     environment:
@@ -12,11 +12,23 @@ services:
   traefik:
     image: "traefik:v2.10"
     container_name: "traefik"
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - ./data:/data
     command:
       - "--api.insecure=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--providers.http.endpoint=http://ssp:8080/plugins/traefik/api_provider?id=api"
+      - "--providers.http.pollInterval=60s"
+      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/data/acme.json"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+#      - "--certificatesresolvers.myresolver.acme.httpchallenge.caserver=xxx"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
     ports:
       - "80:80"
       - "443:443"
