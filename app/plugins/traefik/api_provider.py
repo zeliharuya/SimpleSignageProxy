@@ -16,7 +16,7 @@ def read(id=False): # GET
         data = json.loads(r.text)
 
         # add ssp admin panel
-        provider['http']['routers']['admin']={'entryPoints':['web', 'websecure'], 'service':'admin', 'rule':'HOST(`'+os.environ['SSP_DOMAIN']+'`)'}
+        provider['http']['routers']['admin']={'entryPoints':['web', 'websecure'], 'service':'admin', 'rule':'HOST(`'+os.environ['SSP_DOMAIN']+'`)', 'tls':{'certResolver':'myresolver'}}
         provider['http']['services']['admin']={"loadBalancer":{"servers":[{'url':"http://ssp:8080"}] } }
 
         # provider['http']['middlewares']['chain']={"chain":{"middlewares":["redirect", "strip"]} }
