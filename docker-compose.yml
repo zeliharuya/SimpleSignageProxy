@@ -1,12 +1,12 @@
 services:
   ssp:
     build: .
-#    ports:
-#      - "8081:8080"
     volumes:
       - ./data:/data
     environment:
-      - SSP_DOMAIN=screens.example.com
+      - SSP_DOMAIN=${SSP_DOMAIN}
+      - SSP_USERNAME=${SSP_USERNAME}
+      - SSP_PASSWORD=${SSP_PASSWORD}
 
 
   traefik:
@@ -29,7 +29,3 @@ services:
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
 #      - "--certificatesresolvers.myresolver.acme.httpchallenge.caserver=xxx"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"

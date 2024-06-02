@@ -1,20 +1,27 @@
+// Helper Functions
+String.prototype.niceify = function() {
+  return this.replace('_', ' ').replace(/\b[a-z]/g, function(letter) {
+    return letter.toUpperCase();
+  });
+}
+
+// App Logic
 $.getJSON('plugins', function(data) {
   console.log(data);
   data.forEach((element) => {
-    document.getElementById("navbar").innerHTML +='<a href="#'+element+'" id="nav_item_'+element+'" class="p-2 border-2 border-danger sat-plugins" onclick="load_content(\''+element+'\')">'+element+'</a>'
+    document.getElementById("navbar").innerHTML +='<a href="#'+element+'" id="nav_item_'+element+'" class="p-2 border-2 border-danger sat-plugins" onclick="load_content(\''+element+'\')">'+element.niceify()+'</a>'
   });
 }).done(function () {load_content(window.location.hash.replace("#", ""));});
-
 
 function load_content(plugin) {
   $.getJSON('plugins/'+plugin, function(data) {
     // console.log(data);
-    document.getElementById("sidebar").innerHTML = ''
+    document.getElementById("sidebar").innerHTML = '';
     data.forEach((element) => {
-      document.getElementById("sidebar").innerHTML += '<button onclick="start_feature_read(\''+plugin+'\', \''+element+'\',\'\')" class="btn btn-primary p-2 mt-1" id="feature_button_'+element+'" type="button">'+element+'</button><br>'
+      document.getElementById("sidebar").innerHTML += '<button onclick="start_feature_read(\''+plugin+'\', \''+element+'\',\'\')" class="btn btn-secondary p-2 mt-1" id="feature_button_'+element+'" type="button">'+element.niceify()+'</button><br>'
     });
-    document.getElementById("sidebar").innerHTML += ''
-    $("#navbar > .sat-plugins").removeClass("border-bottom")
+    document.getElementById("sidebar").innerHTML += '';
+    $("#navbar > .sat-plugins").removeClass("border-bottom");
     $("#nav_item_"+plugin).addClass("border-bottom");
     start_feature_read(plugin, data[0],'')
   });
@@ -23,6 +30,9 @@ function load_content(plugin) {
 
 function start_feature_read(plugin, feature, id) {
   document.getElementById("feature_button_"+feature).disabled = true;
+  $(".btn-primary").addClass("btn-secondary");
+  $("#sidebar > .btn").removeClass("btn-primary");
+
   $.getJSON('plugins/'+plugin+'/'+feature+'?id='+id, function(data) {
     if ("text" in data){
       document.getElementById("results").innerHTML = data['text']
@@ -67,7 +77,9 @@ function start_feature_read(plugin, feature, id) {
 
     // document.getElementById("results").innerHTML = '<code class="language-bash">>>'+plugin+'/'+feature+' '+arg1+'\n'+data['pretty']+'</code>\n\n'+document.getElementById("results").innerHTML
     // document.getElementById("results").scrollTop = document.getElementById("results").scrollHeight;
-    document.getElementById("feature_button_"+feature).disabled = false
+    document.getElementById("feature_button_"+feature).disabled = false;
+    $("#feature_button_"+feature).addClass("btn-primary");
+    $("#feature_button_"+feature).removeClass("btn-secondary");
 
   }).fail(function() { alert("Error with module "+plugin+"/"+feature); });
 }
