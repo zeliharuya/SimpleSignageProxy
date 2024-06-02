@@ -4,7 +4,12 @@ This project creates a simple management interface, which allows to dynamically 
 
 A screen is setup as a (e.g. Raspberry Pi) endpoint device running a browser in kiosk mode. This browser displays the URL https://<screen_id>.<domain>/
 
-The <screen_id> can be setup through the management interface, located at <domain>. This <domain> can be configured using the SSP_DOMAIN environment variable located in the docker-compose.yml file.
+The <screen_id> can be setup through the management interface, located at <domain>. This <domain> can be configured using the SSP_DOMAIN environment variable located in the environment file.
+
+Clone the example environment file with:
+```
+cp example.env .env
+```
 
 # Installation
 Use the following docker-compose.yml file for installation (the one in the repo is for development purposes)

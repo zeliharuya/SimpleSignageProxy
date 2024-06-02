@@ -8,7 +8,7 @@ import re
 
 def read(id=False): # GET
     if id == False or id == "":
-        return {"text": "This is the Device onboarding script that you can run on e.g. a raspberry pi. <br> Nothing else to do here. <br>To get the installation script, use <br><br><a id=\"device_install_url\" href=\"/plugins/screens/device_install?id=\">THIS</a><script>document.getElementById(\"device_install_url\").href += window.location.hostname</script>"}
+        return {"text": "This is the Device onboarding script that you can run on e.g. a raspberry pi. <br> Nothing else to do here. <br><br><a id=\"device_install_url\" target=\"_blank\" href=\"/plugins/screens/device_install?id=\">Open Bash Install Script</a><script>document.getElementById(\"device_install_url\").href += window.location.hostname</script>"}
     else:
         script="""
 apt install unclutter xdotool

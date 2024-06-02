@@ -43,9 +43,6 @@
       </div>
       <div class="row d-flex flex-fill overflow-hidden">
         <div class="col-2 pt-2" id="sidebar">
-
-          adfs
-
         </div>
         <div class="col-10">
           <div id="input" class="input-group mt-3">
@@ -57,7 +54,10 @@
 
           <div id="output" class="d-flex flex-column w-75 mh-100 py-2" style="overflow-y: scroll;;position:fixed;">
 <!--             <div class="col-10 ps-5 mh-100 overflow-auto py-2"> -->
-              <pre class="section-to-print" id="results"></pre>
+              <pre class="section-to-print" id="results">
+                <h2>Welcome to SimpleSignageProxy</h2>
+                <p>A screen is setup as a (e.g. Raspberry Pi) endpoint device running a browser in kiosk mode.<br>This browser displays the URL https://screen_id.domain/<br><br>The screen_id can be setup and managed under Screens > Manage Screen.<br>This domain can be configured using the SSP_DOMAIN environment variable located in the environment file.</p>
+              </pre>
 <!--             </div> -->
           </div>
         </div>

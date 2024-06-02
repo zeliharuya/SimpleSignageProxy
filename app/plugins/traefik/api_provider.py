@@ -8,7 +8,7 @@ import bcrypt
 
 def read(id=False): # GET
     if id == False or id == "":
-        return {"text": "This is the API Endpoint for traefik, <br>which implements the proxying for the screens. <br>Nothing else to do here. <br>To get the traefik config, use <br><br><a href=\"/plugins/traefik/api_provider?id=api\">THIS</a>"}
+        return {"text": "This is the API Endpoint for traefik, which implements the proxying for the screens. <br>Nothing else to do here. <br><br><a target=\"_blank\" href=\"/plugins/traefik/api_provider?id=api\">Open traefic Config</a>"}
     else:
         provider = {"http":{"routers": {},"services": {}, "middlewares": {}}}
 

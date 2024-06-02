@@ -4,3 +4,6 @@
 .sat-plugins {
     text-decoration: none;
 }
+#sidebar > .btn{
+    width: 100%;
+}
