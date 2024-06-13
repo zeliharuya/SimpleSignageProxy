@@ -36,7 +36,7 @@ echo -ne "dtoverlay=disable-bt\\ndtoverlay=disable-wifi\\navoid_warnings=1\\n" >
 
 echo -ne "*/15 * * * * /home/pi/refresh.sh >/dev/null 2>&1\\n" > mycron
 crontab -u pi mycron
-echo -ne "@reboot dmesg -n 1\\n0 0 * * * reboot\\n" > mycron
+echo -ne "@reboot dmesg -n 1\\n0 0 * * * /usr/sbin/reboot\\n" > mycron
 crontab -u root mycron
 rm mycron
 
