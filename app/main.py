@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def base():
-    return render_template('index.html')
+    return render_template('index.html', projecturl=os.environ["DOC_PROJECT_URL"], projectname=os.environ["DOC_PROJECT_NAME"])
 
 @app.route('/plugins')
 def list_plugins():
