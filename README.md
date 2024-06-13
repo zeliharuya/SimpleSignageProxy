@@ -12,26 +12,47 @@ cp example.env .env
 ```
 
 # Installation
-Use the following docker-compose.yml file for installation (the one in the repo is for development purposes)
+Use the following docker-compose.yml file for installation. Adjust the example.env and save it to .env (the one in the repo is for development purposes)
 ```
 services:
   ssp:
     image: tttttx2/simplesignageproxy:main
+    restart:
+      always
     volumes:
       - ./data:/data
     environment:
-      - SSP_DOMAIN=screens.example.com
+      - SSP_USERNAME=${SSP_USERNAME}
+      - SSP_DOMAIN=${SSP_DOMAIN}
+      - SSP_PASSWORD=${SSP_PASSWORD}
 
   traefik:
     image: "traefik:v2.10"
+    restart:
+      always
+    volumes:
+      - ./traefikdata:/data
+#    environment:
+#      - LEGO_CA_CERTIFICATES=/data/custom.crt
     command:
       - "--api.insecure=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.http.endpoint=http://ssp:8080/plugins/traefik/api_provider?id=api"
+      - "--providers.http.endpoint=http://${SSP_USERNAME}:${SSP_PASSWORD}@ssp:8080/plugins/traefik/api_provider?id=api"
+      - "--providers.http.pollInterval=60s"
+      # ACME
+      - '--certificatesresolvers.myresolver.acme.email=tech@kastgroup.com'
+      - '--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.myresolver.acme.httpchallenge=true'
+      - '--certificatesresolvers.myresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory'
+      - '--certificatesresolvers.myresolver.acme.storage=/data/acme.json'
+      - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
+
     ports:
       - "80:80"
       - "443:443"
+
 ```
 
 # Development
