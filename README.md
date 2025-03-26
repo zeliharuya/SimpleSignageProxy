@@ -41,7 +41,7 @@ services:
       - "--providers.http.endpoint=http://${SSP_USERNAME}:${SSP_PASSWORD}@ssp:8080/plugins/traefik/api_provider?id=api"
       - "--providers.http.pollInterval=60s"
       # ACME
-      - '--certificatesresolvers.myresolver.acme.email=tech@kastgroup.com'
+      - '--certificatesresolvers.myresolver.acme.email=example@example.com'
       - '--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web'
       - '--certificatesresolvers.myresolver.acme.httpchallenge=true'
       - '--certificatesresolvers.myresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory'
