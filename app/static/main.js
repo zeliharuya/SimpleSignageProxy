@@ -44,8 +44,7 @@ function start_feature_read(plugin, feature, id) {
        tablecode = '<div class="input-group mt-2"><input type="text" class="form-control" placeholder="New ID" aria-label="data" aria-describedby="arg1-button" id="arg1"><button class="btn btn-outline-secondary" type="button" id="new_button" onclick="start_feature_create(\''+plugin+'\', \''+feature+'\', document.getElementById(\'arg1\').value)">NEW</button></div>'
        document.getElementById("results").innerHTML = tablecode
       }
-      else 
-        dev_visiter_mode
+      else {
         tablecode = '<table class="table"><thead><tr><th></th><th></th>'
         Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element.niceify()+'</th>');
         tablecode += '</tr></thead><tbody>'
