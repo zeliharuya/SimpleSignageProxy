@@ -1,6 +1,6 @@
 // Helper Functions
 String.prototype.niceify = function() {
-  return this.replace('_', ' ').replace(/\b[a-z]/g, function(letter) {
+  return this.replaceAll('_', ' ').replace(/\b[a-z]/g, function(letter) {
     return letter.toUpperCase();
   });
 }
@@ -45,9 +45,16 @@ function start_feature_read(plugin, feature, id) {
       }
       else {
         tablecode = '<table class="table"><thead><tr>'
-        Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element+'</th>');
+        Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element.niceify()+'</th>');
         tablecode += '<th></th><th></th></tr></thead><tbody>'
-        data['table'].forEach((element) => tablecode+='<tr><td>'+Object.values(element).join('</td><td>')+'</td><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td></tr>');
+        data['table'].forEach((element) => {
+          for(let key in element) {
+            if (key.startsWith('base64_')) {
+              element[key] = '<img src="data:image/png;base64,' + element[key] + '" style="max-width: 100px; max-height: 100px;">';
+            }
+          }
+          tablecode += '<tr><td>'+Object.values(element).join('</td><td>')+'</td><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td></tr>'
+        });
         // tablecode+='<tr><td>NEW</td>';
         // Object.keys(data['table'][0]).forEach((element) => tablecode+='<td></td>');
         // tablecode += '<td></td></tr>'
@@ -59,19 +66,30 @@ function start_feature_read(plugin, feature, id) {
 
     if ("form" in data){
       formcode = '<form id="form" onsubmit="return false;">'
-      Object.keys(data['form']).forEach((element) => formcode+='<div class="mb-3"><label for="form_'+element+'" class="form-label">'+element+'</label><input type="text" class="form-control" name="'+element+'" id="form_'+element+'" '+((element=='id')?('readonly'):(''))+'></div>');
+      Object.keys(data['form']).forEach((element) => {
+        let input_elem = '';
+        if (element.startsWith('is_')) {
+          input_elem = '<select class="form-control" name="'+element+'" id="form_'+element+'"><option value="false">false</option><option value="true">true</option></select>';
+        }
+        else {
+          input_elem = '<input type="text" class="form-control" name="'+element+'" id="form_'+element+'" '+((element=='id')?('readonly'):(''))+'>';
+        }
+
+        formcode += '<div class="mb-3"><label for="form_'+element+'" class="form-label">'+element+'</label>'+input_elem+'</div>'
+      });
 
       formcode += '<div class="mb-3"><button type="submit" class="btn btn-primary" onclick="start_feature_update(\''+plugin+'\', \''+feature+'\', $(\'#form\').serialize());start_feature_read(\''+plugin+'\', \''+feature+'\',\'\')">Save</button></div>'
       formcode += '</form>'
 
       document.getElementById("results").innerHTML = formcode
 
-      Object.values(data['form']).forEach(function callback(value, index) {
-        $('#form_'+Object.keys(data['form'])[index]).val(value);
+      Object.entries(data['form']).forEach(function([key, value], index) {        
+        if (key.startsWith('is_')) {
+          $('#form_' + key).val(value.toString());  // Ensure value is a string
+        } else {
+          $('#form_' + key).val(value);  // Apply to the key, not the index
+        }
       });
-
-
-
     }
 
 

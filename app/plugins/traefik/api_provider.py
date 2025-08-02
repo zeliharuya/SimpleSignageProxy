@@ -12,9 +12,6 @@ def read(id=False): # GET
     else:
         provider = {"http":{"routers": {},"services": {}, "middlewares": {}}}
 
-        r = requests.get('http://localhost:8080/plugins/screens/manage_screen')
-        data = json.loads(r.text)
-
         # add ssp admin panel
         provider['http']['routers']['admin'] = {'entryPoints': ['web', 'websecure'], 'service': 'admin', 'rule': 'HOST(`'+os.environ['SSP_DOMAIN']+'`)', 'tls': {'certResolver': 'myresolver'}, 'middlewares': ['ssp-auth']}
         provider['http']['services']['admin'] = {'loadBalancer': {"servers": [ {'url': 'http://ssp:8080'} ] } }
@@ -33,12 +30,18 @@ def read(id=False): # GET
         # provider['http']['middlewares']['redirect']={"redirectregex":{"regex":"^(https?://[^/]+/[a-z0-9_]+)$", "replacement":"${1}/"} }
         provider['http']['middlewares']['strip'] = {"stripprefixregex":{"regex":"/[a-z0-9_]+"} }
 
-#^(https?://[^/]+/?)$
+        mode_data = json.loads((requests.get('http://localhost:8080/plugins/mode/visitor_mode')).text)
+        screen_data = json.loads((requests.get('http://localhost:8080/plugins/screens/manage_screen')).text)
+        
         # add configured screens
-        for screen in data['table']:
+        for screen in screen_data['table']:
             try:
-                screen_host = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[0]
-                screen_path = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[1]
+                if len(mode_data['table']) > 0 and mode_data['table'][0]['is_enabled'] == 'true':
+                    screen_host = 'http://ssp:8080'
+                    screen_path = '/plugins/mode/visitor_mode?id=visitor_mode_image'
+                else:
+                    screen_host = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[0]
+                    screen_path = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[1]
 
                 provider['http']['routers']['router_'+screen['id']] = {'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)', 'middlewares':['service_'+screen['id']], 'tls':{'certResolver':'myresolver'}}
                 provider['http']['services']['service_'+screen['id']] = {"loadBalancer":{"servers":[{'url':screen_host}], "passHostHeader": False } }
