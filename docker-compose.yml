@@ -23,7 +23,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--providers.http.endpoint=http://ssp:8080/plugins/traefik/api_provider?id=api"
-      - "--providers.http.pollInterval=60s"
+      - "--providers.http.pollInterval=30s"
       - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
       - "--certificatesresolvers.myresolver.acme.storage=/data/acme.json"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"

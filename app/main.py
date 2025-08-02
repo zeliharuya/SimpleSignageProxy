@@ -7,11 +7,7 @@ import os
 
 app = Flask(__name__)
 
-
-
-
 # Setup redirect and hosting of frontend
-
 @app.route('/')
 def base():
     return render_template('index.html', projecturl=os.environ["DOC_PROJECT_URL"], projectname=os.environ["DOC_PROJECT_NAME"])
@@ -86,8 +82,6 @@ def swaggerjson():
 
             swagger_json["paths"]["/{}/{}".format(plugin,feature)] = paths
     return swagger_json
-
-
 
 if __name__ == '__main__':
     app.debug = True
