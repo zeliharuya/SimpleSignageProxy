@@ -50,8 +50,8 @@ function start_feature_read(plugin, feature, id) {
         tablecode += '</tr></thead><tbody>'
         data['table'].forEach((element) => {
           for(let key in element) {
-            if (key.startsWith('base64_')) {
-              element[key] = '<img src="data:image/png;base64,' + element[key] + '" style="max-width: 100px; max-height: 100px;">';
+            if (key.startsWith('img_')) {
+              element[key] = '<img src="' + element[key] + '" style="max-width: 100px; max-height: 100px;">';
             }
           }
           tablecode += '<tr><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td><td>'+Object.values(element).join('</td><td>')+'</td></tr>'
