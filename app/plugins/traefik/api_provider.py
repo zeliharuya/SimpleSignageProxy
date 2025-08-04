@@ -38,7 +38,7 @@ def read(id=False): # GET
             try:
                 if len(mode_data['table']) > 0 and mode_data['table'][0]['is_enabled'] == 'true':
                     screen_host = 'http://ssp:8080'
-                    screen_path = '/plugins/mode/visitor_mode?id=visitor_mode_image'
+                    screen_path = 'plugins/mode/visitor_mode?id=visitor_mode_image'
                 else:
                     screen_host = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[0]
                     screen_path = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[1]
