@@ -11,7 +11,7 @@ def read(id=False): # GET
         return {"text": "This is the Device onboarding script that you can run on e.g. a raspberry pi. <br> Nothing else to do here. <br><br><a id=\"device_install_url\" target=\"_blank\" href=\"/plugins/screens/device_install?id=installer\">Open Bash Install Script</a>"}
     else:
         script="""
-apt install unclutter xdotool
+apt install unclutter xdotool wtype
 
 mkdir -p /etc/chromium/policies/managed /etc/chromium/policies/recommended
 mkdir -p /home/pi/.config/lxsession/LXDE-pi/
@@ -24,11 +24,14 @@ cat > /home/pi/refresh.sh <<'EOL'
 export XAUTHORITY=/home/pi/.Xauthority
 export DISPLAY=:0
 #xdotool search --onlyvisible --class chromium windowfocus key F5
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+t
+#xdotool search --onlyvisible --class chromium windowfocus key ctrl+t
+wtype -M ctrl -P t
 sleep 2
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+Tab
+#xdotool search --onlyvisible --class chromium windowfocus key ctrl+Tab
+wtype -M ctrl -P tab
 sleep 30
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+w
+#xdotool search --onlyvisible --class chromium windowfocus key ctrl+w
+wtype -M ctrl -P w
 EOL
 
 chmod +x /home/pi/refresh.sh
