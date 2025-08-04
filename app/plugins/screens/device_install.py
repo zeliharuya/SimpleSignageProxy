@@ -43,20 +43,10 @@ echo -ne "@reboot dmesg -n 1\\n0 0 * * * /usr/sbin/reboot\\n" > mycron
 crontab -u root mycron
 rm mycron
 
-
-cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<EOL
-
-# Bildschirmschoner deaktivieren
-@xset s off
-@xset -dpms
-@xset s noblank
-
-# Chromium automatisch im incognito- und Kiosk-Modus starten und eine Seite öffnen
-@chromium-browser --kiosk http://$(hostname -s).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
-#switchtab = bash ~/switchtab.sh
-
-# Mauszeiger deaktivieren
-@unclutter
+cat > /home/pi/.config/labwc/autostart <<EOL
+#!/bin/bash
+sleep 2
+chromium-browser --kiosk http://monitorpi10.screens.ikhost.ch --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
 
 EOL
 
