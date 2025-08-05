@@ -23,15 +23,15 @@ cat > /home/pi/refresh.sh <<'EOL'
 #!/bin/bash
 export XAUTHORITY=/home/pi/.Xauthority
 export DISPLAY=:0
-#xdotool search --onlyvisible --class chromium windowfocus key F5
-#xdotool search --onlyvisible --class chromium windowfocus key ctrl+t
-wtype -M ctrl -P t
+# open new tab loading the default page again
+wtype -M ctrl -P t -p t -m ctrl
 sleep 2
-#xdotool search --onlyvisible --class chromium windowfocus key ctrl+Tab
-wtype -M ctrl -P tab
+# switch back to old tab, new tab is invisible
+wtype -M ctrl -P tab -p tab -m ctrl
+# wait for new tab to load
 sleep 30
-#xdotool search --onlyvisible --class chromium windowfocus key ctrl+w
-wtype -M ctrl -P w
+# kill old tab, new one will be showing again
+wtype -M ctrl -P w -p w -m ctrl
 EOL
 
 chmod +x /home/pi/refresh.sh
