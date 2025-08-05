@@ -7,3 +7,6 @@
 #sidebar > .btn{
     width: 100%;
 }
+a {
+    cursor: pointer;
+}

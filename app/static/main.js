@@ -8,6 +8,7 @@ String.prototype.niceify = function() {
 // App Logic
 $.getJSON('plugins', function(data) {
   console.log(data);
+  document.getElementById("navbar").innerHTML = '<a href="/" class="p-2 border-2 border-danger sat-plugins border-bottom">Home</button>';
   data.forEach((element) => {
     document.getElementById("navbar").innerHTML +='<a href="#'+element+'" id="nav_item_'+element+'" class="p-2 border-2 border-danger sat-plugins" onclick="load_content(\''+element+'\')">'+element.niceify()+'</a>'
   });
@@ -44,16 +45,16 @@ function start_feature_read(plugin, feature, id) {
        document.getElementById("results").innerHTML = tablecode
       }
       else {
-        tablecode = '<table class="table"><thead><tr>';
+        tablecode = '<table class="table"><thead><tr><th></th><th></th>'
         Object.keys(data['table'][0]).forEach((element) => tablecode+='<th scope="col">'+element.niceify()+'</th>');
-        tablecode += '<th></th><th></th></tr></thead><tbody>';
+        tablecode += '</tr></thead><tbody>'
         data['table'].forEach((element) => {
           for(let key in element) {
-            if (key.startsWith('base64_')) {
-              element[key] = '<img src="data:image/png;base64,' + element[key] + '" style="max-width: 100px; max-height: 100px;">';
+            if (key.startsWith('img_')) {
+              element[key] = '<img src="' + element[key] + '" style="max-width: 100px; max-height: 100px;">';
             }
           }
-          tablecode += '<tr><td>'+Object.values(element).join('</td><td>')+'</td><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td></tr>';
+          tablecode += '<tr><td><a onclick="start_feature_read(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Edit</a></td><td><a onclick="start_feature_delete(\''+plugin+'\', \''+feature+'\', \''+element['id']+'\')">Delete</a></td><td>'+Object.values(element).join('</td><td>')+'</td></tr>'
         });
         // tablecode+='<tr><td>NEW</td>';
         // Object.keys(data['table'][0]).forEach((element) => tablecode+='<td></td>');
