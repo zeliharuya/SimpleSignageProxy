@@ -11,7 +11,7 @@ def read(id=False): # GET
         return {"text": "This is the Device onboarding script that you can run on e.g. a raspberry pi. <br> Nothing else to do here. <br><br><a id=\"device_install_url\" target=\"_blank\" href=\"/plugins/screens/device_install?id=installer\">Open Bash Install Script</a>"}
     else:
         script="""
-apt install unclutter xdotool
+apt install unclutter xdotool wtype
 
 mkdir -p /etc/chromium/policies/managed /etc/chromium/policies/recommended
 mkdir -p /home/pi/.config/lxsession/LXDE-pi/
@@ -23,12 +23,15 @@ cat > /home/pi/refresh.sh <<'EOL'
 #!/bin/bash
 export XAUTHORITY=/home/pi/.Xauthority
 export DISPLAY=:0
-#xdotool search --onlyvisible --class chromium windowfocus key F5
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+t
+# open new tab loading the default page again
+wtype -M ctrl -P t -p t -m ctrl
 sleep 2
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+Tab
+# switch back to old tab, new tab is invisible
+wtype -M ctrl -P tab -p tab -m ctrl
+# wait for new tab to load
 sleep 30
-xdotool search --onlyvisible --class chromium windowfocus key ctrl+w
+# kill old tab, new one will be showing again
+wtype -M ctrl -P w -p w -m ctrl
 EOL
 
 chmod +x /home/pi/refresh.sh
@@ -40,20 +43,10 @@ echo -ne "@reboot dmesg -n 1\\n0 0 * * * /usr/sbin/reboot\\n" > mycron
 crontab -u root mycron
 rm mycron
 
-
-cat > /home/pi/.config/lxsession/LXDE-pi/autostart <<EOL
-
-# Bildschirmschoner deaktivieren
-@xset s off
-@xset -dpms
-@xset s noblank
-
-# Chromium automatisch im incognito- und Kiosk-Modus starten und eine Seite öffnen
-@chromium-browser --kiosk http://$(hostname -s).{0} --kiosk --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
-#switchtab = bash ~/switchtab.sh
-
-# Mauszeiger deaktivieren
-@unclutter
+cat > /home/pi/.config/labwc/autostart <<EOL
+#!/bin/bash
+sleep 2
+chromium-browser --kiosk http://monitorpi10.screens.ikhost.ch --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
 
 EOL
 
