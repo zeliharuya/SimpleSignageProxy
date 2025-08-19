@@ -46,7 +46,7 @@ rm mycron
 cat > /home/pi/.config/labwc/autostart <<EOL
 #!/bin/bash
 sleep 2
-chromium-browser --kiosk http://monitorpi10.screens.ikhost.ch --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
+chromium-browser --kiosk http://$(hostname -s).{0} --noerrdialogs --disable-infobars --no-first-run --enable-features=OverlayScrollbar --start-maximized --ignore-certificate-errors
 
 EOL
 
