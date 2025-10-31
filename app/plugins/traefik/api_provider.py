@@ -4,25 +4,25 @@ import requests
 import re
 import bcrypt
 
-#todo input sanitization
 
-def read(id=False): # GET
+def read(id=False):  # GET
     if id == False or id == "":
         return {"text": "This is the API Endpoint for traefik, which implements the proxying for the screens. <br>Nothing else to do here. <br><br><a target=\"_blank\" href=\"/plugins/traefik/api_provider?id=api\">Open traefic Config</a>"}
     else:
-        provider = {"http":{"routers": {},"services": {}, "middlewares": {}}}
+        provider = {"http": {"routers": {}, "services": {}, "middlewares": {}}}
 
         # add ssp admin panel
         provider['http']['routers']['admin'] = {'entryPoints': ['web', 'websecure'], 'service': 'admin', 'rule': 'HOST(`'+os.environ['SSP_DOMAIN']+'`)', 'tls': {'certResolver': 'myresolver'}, 'middlewares': ['ssp-auth']}
         provider['http']['services']['admin'] = {'loadBalancer': {"servers": [ {'url': 'http://ssp:8080'} ] } }
-
+        provider['http']['middlewares']['headers'] = {"headers": {"customRequestHeaders" : {"X-Screen-System" : "SimpleSignageProxy", "X-Environment": os.environ.get("ENVIRONMENT", "production")}}}
+        
         # add ssp HTTP Basic Auth
         salt = bcrypt.gensalt()
         basicauth_password = bcrypt.hashpw(os.environ['SSP_PASSWORD'].encode('utf-8'), salt)
 
         provider['http']['middlewares']['ssp-auth'] = {
             'basicAuth': {
-                'users': [ os.environ['SSP_USERNAME'] + ":" + basicauth_password.decode() ]
+                'users': [os.environ['SSP_USERNAME'] + ":" + basicauth_password.decode() ]
             }
         }
 
@@ -45,7 +45,7 @@ def read(id=False): # GET
 
                 provider['http']['routers']['router_'+screen['id']] = {'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)', 'middlewares':['service_'+screen['id']], 'tls':{'certResolver':'myresolver'}}
                 provider['http']['services']['service_'+screen['id']] = {"loadBalancer":{"servers":[{'url':screen_host}], "passHostHeader": False } }
-                provider['http']['middlewares']['service_'+screen['id']] = {"redirectregex":{"regex":"^(https?://[^/]+/?)$", "replacement":"${1}"+screen_path} }
+                provider['http']['middlewares']['service_'+screen['id'], 'headers'] = {"redirectregex":{"regex":"^(https?://[^/]+/?)$", "replacement":"${1}"+screen_path} }
             except:
                 print("error parsing URL")
 
