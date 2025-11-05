@@ -43,10 +43,19 @@ def read(id=False): # GET
                     screen_host = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[0]
                     screen_path = re.match("^(https?://[^/]+)/(.*)$", screen['url']).groups()[1]
 
-                provider['http']['routers']['router_'+screen['id']] = {'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)', 'middlewares':['service_'+screen['id']], 'tls':{'certResolver':'myresolver'}}
+                provider['http']['routers']['router_'+screen['id']] = {'entryPoints':['web', 'websecure'], 'service':'service_'+screen['id'], 'rule':'HOST(`'+screen['id']+'.'+os.environ["SSP_DOMAIN"]+'`)', 'middlewares':['redirect_'+screen['id'], 'header_'+screen['id']], 'tls':{'certResolver':'myresolver'}}
                 provider['http']['services']['service_'+screen['id']] = {"loadBalancer":{"servers":[{'url':screen_host}], "passHostHeader": False } }
-                provider['http']['middlewares']['service_'+screen['id']] = {"redirectregex":{"regex":"^(https?://[^/]+/?)$", "replacement":"${1}"+screen_path} }
+                provider['http']['middlewares']['redirect_'+screen['id']] = {"redirectregex":{"regex":"^(https?://[^/]+/?)$", "replacement":"${1}"+screen_path} }
+
+                upstream_headers = {}
+                try:
+                    upstream_headers = json.loads(screen['headers'])
+                except:
+                    pass
+
+                provider['http']['middlewares']['header_'+screen['id']] = {"headers": {"customRequestHeaders" : upstream_headers} }
             except:
                 print("error parsing URL")
 
         return provider
+
